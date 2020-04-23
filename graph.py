@@ -7,7 +7,7 @@ import scipy.stats as stats
 import statsmodels.api as sm
 from statsmodels.formula.api import ols
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
-
+import seaborn as sn
 
 
 with open('FinalList.csv','r') as csv_file:
@@ -106,27 +106,22 @@ for i, val in enumerate(DXO):
     DXO[i] = (val-amin) / (amax-amin)
  
 
-#print("CHECKING ALL")
-#print(aPrice)
-##print(Pric)
-#print(Price)
-#print(aDXO)
-#print(DXO)
-#print(Name)
-#print()
-#print(DXO)
-#print()
-#print(CPU)
-#print()
-#print(GPU)
-#print()
-#print(UX)
-#print()
-#print(MEM)
-#print()
-#print(Total)
-#print()
-#print(Price)
+print("NORMALIZZED DATA")
+print(Name)
+print()
+print(DXO)
+print()
+print(CPU)
+print()
+print(GPU)
+print()
+print(UX)
+print()
+print(MEM)
+print()
+print(Total)
+print()
+print(Price)
 
 
 def Average(lst):
@@ -169,12 +164,6 @@ Msub = Subtract(MEM)
 Gsub = Subtract(GPU)
 
 print()
-#print("SQUARE OF SUBTRACTIONS")
-#print (Dsub)
-#print (Usub)
-#print (Csub)
-#print (Msub)
-#print (Gsub)
 print()
 print("SUM OF SUBTRACTIONS")
 Dsum = sum(Dsub)
@@ -201,8 +190,7 @@ big.append(aCPU)
 big.append(aMEM)
 big.append(aGPU)
 print()
-#print("LIST OF LIST")
-#print(big)
+
 print()
 print()
 plt.boxplot(big)
@@ -217,9 +205,9 @@ fvalue, pvalue = stats.f_oneway(df['DXO'], df['UX'], df['CPU'], df['MEM'], df['G
 print("FVALUE AND PVALUE")
 print(fvalue, pvalue)
 print()
-print()
-print()
 
+print()
+print()
 d_melt = pd.melt(df.reset_index(), id_vars=['index'], value_vars=['DXO', 'UX', 'CPU', 'MEM','GPU'])
 d_melt.columns = ['index', 'treatments', 'value']
 model = ols('value ~ C(treatments)', data=d_melt).fit()
@@ -235,15 +223,10 @@ print()
 m_comp = pairwise_tukeyhsd(endog=d_melt['value'], groups=d_melt['treatments'], alpha=0.10)
 print(m_comp)
 
-#print (aDXO)
-#plt.scatter(Dxo,Price, color='r')
-##plt.scatter(MEM,Price, color='g')
-#plt.show()
-#
+
 plt.bar(aPrice,aTotal)
 plt.ylabel("TOTAL BENCHMARK")
 plt.xlabel("PRICE")
-#plt.ylim([10000,100000])
 
 plt.show()
 plt.bar(aDXO,aPrice)
@@ -251,9 +234,14 @@ plt.xlabel("CAMERA RATING")
 plt.ylabel("PRICE")
 plt.show()
 
-#f, ax = plt.subplots(1)
-#print (aPrice)
-#print(aTotal)
-#ax.plot(aPrice, aTotal)
-#ax.set_ylim(bottom=0)
-#plt.show(f)
+print()
+print()
+
+core = df.corr()
+print("CORRELATION")
+print(core)
+print()
+print()
+
+sn.heatmap(core, annot=True)
+plt.show()
